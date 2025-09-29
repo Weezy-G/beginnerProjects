@@ -15,6 +15,9 @@ from sklearn.model_selection import train_test_split
 #used to create class variables
 from dataclasses import dataclass
 
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
+
 @dataclass
 #anything i need i will give to this
 #inputs im giving to data ingestion components
@@ -62,5 +65,17 @@ class dataIngestion:
 
 #initiate and run
 if __name__ == "__main__":
+
+    #combined data ingestion, then combined data transformation
     obj = dataIngestion()
-    obj.initiate_data_ingestion()
+
+    #returning these 2 values
+    train_data,test_data = obj.initiate_data_ingestion()
+
+
+
+    #calls the DataTransformation() class in data_transformation.py
+    data_transformation = DataTransformation()
+
+    #calls the initiate_data_transformation function in data_transformation.py
+    data_transformation.initiate_data_transformation(train_data, test_data)
