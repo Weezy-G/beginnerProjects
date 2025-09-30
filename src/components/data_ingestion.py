@@ -18,6 +18,9 @@ from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
 
+from src.components.model_trainer import ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
+
 @dataclass
 #anything i need i will give to this
 #inputs im giving to data ingestion components
@@ -78,4 +81,7 @@ if __name__ == "__main__":
     data_transformation = DataTransformation()
 
     #calls the initiate_data_transformation function in data_transformation.py
-    data_transformation.initiate_data_transformation(train_data, test_data)
+    train_arrary, test_array,_ = data_transformation.initiate_data_transformation(train_data, test_data)
+
+    model_trainer = ModelTrainer()
+    print(model_trainer.initiate_model_trainer(train_arrary, test_array))
