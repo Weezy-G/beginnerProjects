@@ -8,6 +8,10 @@ from sklearn.metrics import r2_score
 
 from src.exception import CustomException
 
+#needed for hyperparameters
+#
+from sklearn.model_selection import GridSearchCV
+
 def save_obj(file_path, obj):
     try:
         dir_path = os.path.dirname(file_path)
@@ -25,7 +29,7 @@ def save_obj(file_path, obj):
 
 
 #has report for models
-def evaluate_models(X_train, y_train, X_test, y_test, models):
+def evaluate_models(X_train, y_train, X_test, y_test, models, param):
 
     try:
         report = dict()
@@ -33,9 +37,20 @@ def evaluate_models(X_train, y_train, X_test, y_test, models):
         #loop through each model
         for i in range(len(list(models))):
             model = list(models.values())[i]
+            #listing and getting all the hyperparameters
+            para=param[list(models.keys())[i]]
 
             #train model
-            model.fit(X_train, y_train)
+            #model.fit(X_train, y_train)
+
+            #cv=3 means 3-fold cross-validation
+            gs = GridSearchCV(model,para,cv=3)
+            gs.fit(X_train,y_train)
+
+            model.set_params(**gs.best_params_)
+
+            #train model
+            model.fit(X_train,y_train)
 
             #prediction on X_train and X_test
             y_train_pred = model.predict(X_train)
