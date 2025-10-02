@@ -33,12 +33,15 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
 
     try:
         report = dict()
+        fitted = dict()
 
         #loop through each model
         for i in range(len(list(models))):
             model = list(models.values())[i]
+            
             #listing and getting all the hyperparameters
-            para=param[list(models.keys())[i]]
+            name  = list(models.keys())[i]
+            para=param[name]
 
             #train model
             #model.fit(X_train, y_train)
@@ -47,9 +50,10 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
             gs = GridSearchCV(model,para,cv=3)
             gs.fit(X_train,y_train)
 
+            # set the best parameters found by GridSearchCV
             model.set_params(**gs.best_params_)
 
-            #train model
+            #train model (with hyperparameters)
             model.fit(X_train,y_train)
 
             #prediction on X_train and X_test
@@ -63,13 +67,21 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
             #saves the models score in report = dict()
             report[list(models.keys())[i]] = test_model_score
 
-        return report
+            #keep the fitted model so the caller can save/use it directly
+            fitted[name] = model
+        return report, fitted
+    
+    except Exception as e:
+        raise CustomException(e, sys)
+    
 
-
-
-
-
-
+#opening file_path and takes the trained model
+#"rb" means read binary, reads files that store saved Python objects
+#loads pkl file
+def load_obj(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
 
     except Exception as e:
         raise CustomException(e, sys)

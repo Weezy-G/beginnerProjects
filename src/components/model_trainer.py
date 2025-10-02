@@ -97,7 +97,7 @@ class ModelTrainer:
 
 
             #model score are stored model_report
-            model_report: dict = evaluate_models(X_train = X_train,y_train = y_train, 
+            model_report, fitted_models = evaluate_models(X_train = X_train, y_train = y_train, 
                                                  X_test = X_test, y_test = y_test, models = models, param = params)
 
             #gets the best model score from the dictionary
@@ -112,7 +112,7 @@ class ModelTrainer:
             ]
 
             #pick the name from models{}
-            best_model = models[model_best_name]
+            best_model = fitted_models[model_best_name]
 
             if best_model_score < 0.6:
                 raise CustomException("all model scores less that 60%, no best model found")
